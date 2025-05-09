@@ -6,14 +6,14 @@ pipeline {
     }
 
     tools {
-        maven 'maven3'
+        maven 'Maven 3'
         jdk 'jdk-17'
     }
 
     stages {
         stage('git checkout') {
             steps {
-                git branch: 'master', url: 'https://github.com/ygminds73/Ekart.git'
+                git branch: 'master', url: 'https://github.com/anuradha3012/Ekart.git'
             }
         }
 
@@ -55,7 +55,7 @@ pipeline {
 
         stage('deploy to Nexus') {
             steps {
-                withMaven(globalMavenSettingsConfig: 'global-maven', jdk: 'jdk-17', maven: 'maven3', mavenSettingsConfig: '', traceability: true) {
+                withMaven(globalMavenSettingsConfig: 'global-maven', jdk: 'jdk-17', maven: 'Maven 3', mavenSettingsConfig: '', traceability: true) {
                     sh "mvn deploy -DskipTests=true"
                 }
             }
@@ -65,7 +65,7 @@ pipeline {
         stage('build and Tag docker image') {
             steps {
                 script {
-                        sh "docker build -t youngminds73/ekart:latest -f docker/Dockerfile ."
+                        sh "docker build -t hadkaranuradha/ekart:latest -f docker/Dockerfile ."
                     }
             }
         }
@@ -74,8 +74,8 @@ pipeline {
             steps{
                 script{
                    withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'dockerhubpwd')]) {
-                   sh 'docker login -u youngminds73 -p ${dockerhubpwd}'}
-                   sh 'docker push youngminds73/ekart:latest'
+                   sh 'docker login -u hadkaranuradha -p ${dockerhubpwd}'}
+                   sh 'docker push hadkaranuradha/ekart:latest'
                 }
             }
         }
